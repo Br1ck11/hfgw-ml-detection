@@ -70,8 +70,8 @@ cfg = VAEConfig(
     num_samples_to_read_per_file=112000000,
     offset=0,
     sampling_rate_hz=14e6,
-    window_size=4096,
-    step_size=4096 // 10,
+    window_size=1024,
+    step_size=1024 // 10,
     train_ratio=0.84,
     val_ratio=0.15,
     test_ratio=0.01,
@@ -96,7 +96,7 @@ cfg = VAEConfig(
         "val": 1400, # 2800
         "test": 0,
     },  # roughly 5x more train than val injections
-    m_PBH_injection_list=[1e-12],  # solar masses; converted to kg below
+    m_PBH_injection_list=[1e-8],  # solar masses; converted to kg below
     amplitude_spectrum_range=[
         1.0, 1.5, 2.0, 2.5, 3.0,
         3.5, 4.0, 4.5
