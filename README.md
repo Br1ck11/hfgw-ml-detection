@@ -72,7 +72,7 @@ GravNet/
 │
 └── VAE_LatenClassifier_Project/        VAE latent-classifier study
     ├── VAEProjectPaper.pdf                            VAE report
-    ├── vaeModel/                        Model, losses, config, analysis
+    ├── vae/                             Model, losses, config, analysis
     │   ├── model.py        encoder → (z_mean, z_log_var) → z → decoder,
     │   │                   classifier head on the latent, optional recon branch
     │   ├── losses.py       focal, KL, log-sum-exp tail, correlation, mass-regression
@@ -94,7 +94,6 @@ GravNet/
     └── evaluation/
         ├── efficiency_curve.py          efficiency vs peak SNR, SNR95 @ FP/year (main metric)
         ├── analyze.py                   detector xAI + metrics
-        ├── matched_filter_benchmark.py  classical baseline for comparison
         ├── evaluate_post_vae_signal_manifold.py, window_score_diagnostic.py,
         └── compare_ablation_analysis.py, full_model_insight.py, audit_low_snr_pipeline.py
 ```
@@ -104,15 +103,27 @@ Raw detector data, training runs and checkpoints are not tracked (see
 
 ## Installation
 
-Python with **TensorFlow/Keras** (plus NumPy, SciPy, pandas, Matplotlib). A
-minimal environment:
+The code uses **TensorFlow/Keras**, together with scientific-computing,
+plotting and `.tiq`-file utilities. Create a virtual environment and install
+the required packages:
 
 ```bash
 python -m venv .venv && source .venv/bin/activate
-pip install tensorflow numpy scipy pandas matplotlib
+python -m pip install --upgrade pip
+python -m pip install tensorflow keras tensorflow-probability numpy scipy pandas matplotlib iqtools
 ```
 
-A GPU is recommended for training; evaluation runs on CPU.
+`tensorflow-probability` is used by the CNN–LSTM loss implementation, while
+`iqtools` is required to load the detector recordings. The optional
+[`SciencePlots`](https://github.com/garrettj403/SciencePlots) package enables
+the plotting style used by the waveform-generation script:
+
+```bash
+python -m pip install SciencePlots
+```
+
+A GPU is recommended for training. Evaluation can run on CPU, although the
+larger evaluation scans may take considerably longer.
 
 ## Quickstart (VAE study)
 
@@ -125,7 +136,7 @@ cd VAE_LatenClassifier_Project
 # Train a VAE-classifier from scratch
 python training/train.py
 
-# Reproduce the loss-configuration experiment matrix
+# Run the loss-configuration experiment matrix
 python training/run_experiments.py all
 
 # Evaluate: efficiency curves and SNR95 vs false-positive rate (main metric)
@@ -133,7 +144,9 @@ python evaluation/efficiency_curve.py
 ```
 
 All model, data, loss and optimiser settings live in a single config dataclass
-(`vaeModel/config.py`).
+(`vae/config.py`). The checked-in training and evaluation scripts contain
+example experiment configurations. They are not guaranteed to reproduce the
+exact configurations or numerical results reported in the accompanying papers.
 
 ## Data
 
